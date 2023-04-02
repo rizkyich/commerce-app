@@ -20,4 +20,19 @@ export class ProductController {
       res.status(500).json({ message: "Something went wrong" })
     }
   }
+
+  public getProductById = async (req: Request, res: Response) => {
+    try {
+      const { productId } = req.params;
+      const product = await this.product.findProductById(productId);
+    
+      if (!product) {
+        res.status(404).json({ message: "Product not exist" })
+      }
+
+      res.status(200).json(product)
+    } catch (error) {
+      res.status(500).json({ message: "Something went wrong" })
+    }
+  }
 }

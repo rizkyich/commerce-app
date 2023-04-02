@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Canon AT-1",
+    "description": "",
+    "quantity": 20,
+    "price": 2000000,
+    "imageUrl": "https://images.unsplash.com/photo-1494168684379-764b46e4be02?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1146&q=80"
+  },
+  {
+    "name": "Nikon FG",
+    "description": "",
+    "quantity": 12,
+    "price": 3000000,
+    "imageUrl": "https://images.unsplash.com/photo-1515197304934-f95872d7156f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+  },
+  {
+    "name": "Polaroid OneStep",
+    "description": "",
+    "quantity": 9,
+    "price": 12000000,
+    "imageUrl": "https://images.unsplash.com/photo-1521499672281-c8be7d37d451?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+  },
+  {
+    "name": "Polaroid Pronto600",
+    "description": "",
+    "quantity": 3,
+    "price": 15000000,
+    "imageUrl": "https://images.unsplash.com/photo-1516962126636-27ad087061cc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
+  },
+  {
+    "name": "Kodak Color Plus 200",
+    "description": "",
+    "price": 150000,
+    "quantity": 60,
+    "imageUrl": "https://images.unsplash.com/photo-1616348857272-63d513d489f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
+  }
+]

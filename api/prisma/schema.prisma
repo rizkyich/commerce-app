@@ -11,15 +11,16 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
-  name      String
-  role      Role     @default(USER)
-  cart      Cart?
-  Order     Order[]
-  Review    Review[]
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  email          String   @unique
+  name           String
+  hashedPassword String
+  role           Role     @default(USER)
+  cart           Cart?
+  Order          Order[]
+  Review         Review[]
 }
 
 model Order {
