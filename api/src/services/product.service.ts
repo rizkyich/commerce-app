@@ -1,6 +1,7 @@
 import { PrismaClient, Product } from "@prisma/client";
 import { Service } from "typedi";
 
+@Service()
 export class ProductService {
   public product = new PrismaClient().product;
 
