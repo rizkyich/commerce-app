@@ -5,6 +5,7 @@ import express, {
 import cors from 'cors';
 
 import Routes from './types/routes.type';
+import ErrorHandler from '../middlewares/error.middleware';
 
 import { NODE_ENV, PORT } from './config';
 
@@ -21,6 +22,7 @@ export class App {
 
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
+    this.initializeErrorHandler();
   }
 
   public getServer() {
@@ -43,5 +45,9 @@ export class App {
     routes.forEach(route => {
       this.app.use("/store/v1", route.router)
     })
+  }
+
+  private initializeErrorHandler() {
+    this.app.use(ErrorHandler);
   }
 }
