@@ -1,6 +1,7 @@
 import { PrismaClient, Product } from "@prisma/client";
 import { Service } from "typedi";
-import HttpError from "../../errors/HttpError";
+
+import HttpError from "../errors/HttpError";
 
 @Service()
 export class ProductService {

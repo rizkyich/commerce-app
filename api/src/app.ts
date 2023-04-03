@@ -5,7 +5,7 @@ import express, {
 import cors from 'cors';
 
 import Routes from './types/routes.type';
-import ErrorHandler from '../middlewares/error.middleware';
+import ErrorHandler from './middlewares/error.middleware';
 
 import { NODE_ENV, PORT } from './config';
 
