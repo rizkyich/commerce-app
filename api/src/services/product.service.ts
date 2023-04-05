@@ -38,5 +38,25 @@ export class ProductService {
 
     return result;
   }
+
+  public async deleteProductById(productId: string) {
+    await this.findProductById(productId);
+
+    const result = await this.product.delete({
+      where: {
+        id: productId,
+      }
+    });
+
+    return result;
+  }
+
+  public async createProduct(data: Product) {
+    const result = await this.product.create({
+      data: { ...data },
+    })
+
+    return result;
+  }
 }
 

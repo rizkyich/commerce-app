@@ -48,4 +48,26 @@ export class ProductController {
       next(error)
     }
   }
+
+  public deleteProductById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { productId } = req.params;
+
+      await this.product.deleteProductById(productId);
+
+      res.status(200).json({ message: `product with id ${productId} has successfuly deleted` })
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public createNewProduct = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await this.product.createProduct(req.body);
+
+      res.status(201).json({ data: result })
+    } catch (error) {
+      next(error);
+    }
+  }
 }
