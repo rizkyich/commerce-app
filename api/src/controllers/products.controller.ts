@@ -3,15 +3,25 @@ import { Container} from 'typedi';
 import { Product } from '@prisma/client';
 
 import { ProductService } from '../services/product.service';
+import { CategoriesProductsService } from '../services/categoriesProduct.service';
+import { ProductCreateBodyType } from '../types/products.type';
 
 export class ProductController {
   public product = Container.get(ProductService);
+  public categoriesProducts = Container.get(CategoriesProductsService)
 
   public getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const allProductData = await this.product.findAllProduct();
+      const { categoryId } = req.query;
+      let productData: Product[] = []
+      
+      if (categoryId) {
+        productData = await this.categoriesProducts.findAllProductByCategoryId(categoryId as string);
+      } else {
+        productData = await this.product.findAllProduct();
+      }
 
-      res.status(200).json(allProductData)
+      res.status(200).json(productData)
     } catch (error) {
       next(error)
     }
@@ -59,11 +69,53 @@ export class ProductController {
 
   public createNewProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const result = await this.product.createProduct(req.body);
+      const {
+        name,
+        description,
+        imageUrl,
+        price,
+        quantity,
+        categories
+      } = req.body as ProductCreateBodyType;
 
-      res.status(201).json({ data: result })
+      const product = await this.product.createProduct({
+        name,
+        description,
+        imageUrl,
+        price,
+        quantity
+      });
+
+      if (categories?.length && product.id) {
+        await this.categoriesProducts.addCategoriesProducts(categories, {
+          key: "productId",
+          value: product.id
+        })
+      }
+
+      res.status(201).json(product)
     } catch (error) {
       next(error);
+    }
+  }
+
+
+  public addProductToCategeories = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { productId } = req.params;
+      const { categories } = req.body;
+
+      const result = await this.categoriesProducts.addCategoriesProducts(
+        categories,
+        {
+          key: "productId",
+          value: productId
+        }
+      );
+
+      res.status(200).json(result);
+    } catch (error) {
+      next(error)
     }
   }
 }
