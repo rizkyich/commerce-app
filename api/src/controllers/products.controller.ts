@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { Container} from 'typedi';
+import { Product } from '@prisma/client';
 
 import { ProductService } from '../services/product.service';
-import { ProductResponseType } from '../types/products.type';
 
 export class ProductController {
   public product = Container.get(ProductService);
@@ -10,18 +10,14 @@ export class ProductController {
   public getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const allProductData = await this.product.findAllProduct();
-      const responseData: ProductResponseType = {
-        products: allProductData,
-        message: "findAll"
-      }
 
-      res.status(200).json(responseData)
+      res.status(200).json(allProductData)
     } catch (error) {
       next(error)
     }
   }
 
-  public getProductById = async (req: Request, res: Response, next: NextFunction) => {
+  public getProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { productId } = req.params;
       const product = await this.product.findProductById(productId);
@@ -32,7 +28,7 @@ export class ProductController {
     }
   }
 
-  public updateProductQuantity = async (req: Request, res: Response, next: NextFunction) => {
+  public updateProductQuantity = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { productId } = req.params;
       const { quantity } = req.body;
@@ -49,7 +45,7 @@ export class ProductController {
     }
   }
 
-  public deleteProductById = async (req: Request, res: Response, next: NextFunction) => {
+  public deleteProductById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { productId } = req.params;
 
@@ -61,7 +57,7 @@ export class ProductController {
     }
   }
 
-  public createNewProduct = async (req: Request, res: Response, next: NextFunction) => {
+  public createNewProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const result = await this.product.createProduct(req.body);
 
