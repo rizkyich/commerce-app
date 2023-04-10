@@ -3,6 +3,8 @@ import { Service } from "typedi";
 
 import HttpError from "../errors/HttpError";
 
+import { ProductCreateBodyType } from '../types/products.type';
+
 @Service()
 export class ProductService {
   public product = new PrismaClient().product;
@@ -51,11 +53,16 @@ export class ProductService {
     return result;
   }
 
-  public async createProduct(data: Product) {
+  public async createProduct(data: ProductCreateBodyType) {
     const result = await this.product.create({
-      data: { ...data },
+      data: {
+        name: data.name,
+        description: data.description,
+        imageUrl: data.imageUrl,
+        price: data.price,
+        quantity: data.quantity
+      },
     })
-
     return result;
   }
 }
