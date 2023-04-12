@@ -1,11 +1,14 @@
 import Head from 'next/head'
 import { Inter } from 'next/font/google'
-import MainLayout from '@/components/MainLayout'
+
+import Layout from '@/components/layout/Layout'
 import HeroSection from '@/components/HeroSection'
+import CatalogSection from '@/components/CatalogSection'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  console.log("render")
   return (
     <>
       <Head>
@@ -14,9 +17,10 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <MainLayout>
+      <Layout>
         <HeroSection/>
-      </MainLayout>
+        <CatalogSection/>
+      </Layout>
     </>
   )
 }
