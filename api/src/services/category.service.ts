@@ -2,14 +2,23 @@ import { PrismaClient, Category } from "@prisma/client";
 import { Service } from "typedi";
 
 import HttpError from "../errors/HttpError";
+import excludeFields from "../helpers/excludeFields";
 
 @Service()
 export class CategoryService {
   public category = new PrismaClient().category;
 
-  public async findAllCategory(): Promise<Category[]> {
+  public async findAllCategory(): Promise<Omit<Category, 'createdAt' | 'updatedAt'>[]> {
     const allCategory = await this.category.findMany();
-    return allCategory;
+
+    return allCategory.reduce(
+      (acc, category) => {
+        acc.push(excludeFields(category, ['createdAt', 'updatedAt']))
+
+        return acc;
+      }, 
+      [] as Omit<Category, 'createdAt' | 'updatedAt'>[]
+    );
   }
 
   public async findCategoryById(categoryId: string) {

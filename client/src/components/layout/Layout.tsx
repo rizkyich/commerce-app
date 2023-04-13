@@ -17,7 +17,7 @@ export default function Layout({ children }: LayoutProps) {
           'w-full',
           'mt-16'
         )}>
-          <div className='container mx-auto flex flex-col gap-12'>
+          <div className='container mx-auto px-5 py-5'>
             {children}
           </div>
         </main>

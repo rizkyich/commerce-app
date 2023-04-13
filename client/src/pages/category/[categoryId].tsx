@@ -1,8 +1,8 @@
 import Head from 'next/head'
+import { GetServerSidePropsContext } from 'next'
 import { Inter } from 'next/font/google'
 
 import Layout from '@/components/layout/Layout'
-import HeroSection from '@/components/HeroSection'
 import CatalogSection from '@/components/CatalogSection'
 
 import { getCategoryList } from '@/services/category'
@@ -12,16 +12,15 @@ import { ProductType } from '@/types/productTypes'
 
 const inter = Inter({ subsets: ['latin'] })
 
-type HomeProps = {
-  categories: CategoryType[];
-  products: ProductType[];
+type CatalogPageProps = {
+  categories: CategoryType[],
+  products: ProductType[]
 }
 
-export default function Home({
+export default function CatalogPage({
   categories,
   products
-}: HomeProps) {
-  console.log({ categories })
+}: CatalogPageProps) {
 
   return (
     <>
@@ -32,7 +31,6 @@ export default function Home({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Layout>
-        <HeroSection/>
         <CatalogSection
           categories={categories}
           products={products}
@@ -42,12 +40,27 @@ export default function Home({
   )
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   try {
+    const { params } = context
+
     const categories =  await getCategoryList();
     categories.sort((a, b) => b.name.length - a.name.length)
 
-    const products = await getProductList();
+    let products: ProductType[];
+
+    if (params?.categoryId !== "all") {
+      const category = categories.find((category: CategoryType) => category.id === params?.categoryId);
+
+      if (!category) {
+        return {
+          notFound: true
+        }
+      }
+      products = await getProductList(category.id);
+    } else {
+      products = await getProductList();
+    }
 
     return {
       props: {
@@ -59,3 +72,4 @@ export async function getServerSideProps() {
     console.error(error)
   } 
 }
+

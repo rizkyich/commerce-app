@@ -99,6 +99,10 @@ a {
   body {
     @apply bg-cultured;
   }
+
+  p {
+    @apply text-chinese-black;
+  }
 }
 
 

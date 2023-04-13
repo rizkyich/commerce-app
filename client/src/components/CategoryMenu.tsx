@@ -1,27 +1,53 @@
-import React  from 'react'
+import React, { useEffect, useState }  from 'react'
 import clsx from 'clsx';
-import { useInView } from 'react-intersection-observer';
+import Link from 'next/link';
+
+import { getCategoryList } from '@/services/category';
+import { CategoryType } from '@/types/categoryTypes';
 
 
-const DUMMY_CATEGORIES = ["Analog", "DIGITAL", "FILM ROLL"]
+type CategoryMenuProps = {
+  categories: CategoryType[]
+}
 
-function CategoryMenu() {
+function CategoryMenu({
+  categories
+}: CategoryMenuProps) {
   return (
     <aside
       className={clsx(
-        'w-24 top-0 flex flex-col',
+        ' w-52 top-0',
+        'hidden md:flex flex-col',
       )}
     >
       <ul>
         {
-          DUMMY_CATEGORIES.map((item: string, index: number) => {
+          categories?.map((item: CategoryType) => {
             return (
-              <li key={index}>
-                {item}
+              <li
+                key={item.id}
+                className='my-2'
+              >
+                <Link
+                  href={`/category/${item.id}`}
+                  className='text-chinese-black text-[22px] font-semibold'
+                >
+                  {item.name}
+                </Link>
               </li>
             )
           })
+
         }
+          <span className='block w-full border-b-2 my-6 border-majorelle-blue'/>
+          <li>
+            <Link
+              href='/category/all'
+              className='text-chinese-black text-[22px] font-semibold'
+            >
+              View All
+            </Link>
+          </li>
       </ul>
     </aside>
   )
