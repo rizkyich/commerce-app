@@ -82,9 +82,10 @@ export class ProductService {
     return result;
   }
 
-  public async getRecommendedProducts(productId: string): Promise<Product[] | null> {
-    let result: Product[] | null = null;
+  public async getRecommendedProducts(productId: string): Promise<Product[]> {
+    let result: Product[] = [];
 
+    // find categories of the product
     const product = await this.product.findUniqueOrThrow({
       where: {
         id: productId
@@ -94,18 +95,44 @@ export class ProductService {
       }
     })
 
+    // when categories exist
     if (product.CategoriesOnProducts.length) {
       const categoryIdArr = product.CategoriesOnProducts.map(item => item.categoryId);
 
+      // get all products within the same category
       const categoriesWithProducts = await this.cagoriesProducts.getProductsByCategoryId(categoryIdArr);
-
-      if (categoriesWithProducts?.length) {
-        result = categoriesWithProducts.map(product => product.product);
+      
+      if (categoriesWithProducts) {
+        result = [
+          ...categoriesWithProducts
+              .map(categoryProduct => categoryProduct.product)
+              .filter(product => product.id !== productId)
+        ];
       }
-
-    } else {
-      console.log("masuk")
     }
+
+    // when recommended products is still below 3 items
+    if (result.length < 3) {
+      // find all the other products ordered by quantity items
+      const otherProducts = await this.product.findMany({
+        where: {
+          NOT: {
+            id: productId
+          }
+        },
+        orderBy: {
+          quantity: 'desc'
+        }
+      })
+
+      // set distincts product
+      result =  Object.values(
+        [...result, ...otherProducts].reduce((acc, product: Product) => ({...acc, [product.id]: product}) ,{})
+      )
+    }
+
+    // make recommended list item to only have 3 item
+    result.length = 3;
 
     return result;
   }
