@@ -46,4 +46,21 @@ export class CategoriesProductsService {
   
     return result;
   }
+
+  public async getProductsByCategoryId(categoryId: string | string[]) {
+    if (Array.isArray(categoryId)) {
+      const result = await this.categoriesProducts.findMany({
+        where: {
+          categoryId: {
+            in: categoryId
+          }
+        },
+        include: {
+          product: true
+        }
+      })
+
+      return result;
+    }
+  }
 }

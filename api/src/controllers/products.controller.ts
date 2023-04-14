@@ -118,4 +118,15 @@ export class ProductController {
       next(error)
     }
   }
+
+  public getRecommendedProducts = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { productId } = req.params;
+      const result = await this.product.getRecommendedProducts(productId);
+
+      res.status(200).json(result);
+    } catch (error) {
+      next(error)
+    }
+  }
 }

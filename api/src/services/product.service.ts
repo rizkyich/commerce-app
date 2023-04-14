@@ -1,6 +1,8 @@
 import { PrismaClient, Product } from "@prisma/client";
 import { Service } from "typedi";
 
+import { CategoriesProductsService } from "./categoriesProduct.service";
+
 import HttpError from "../errors/HttpError";
 
 import { ProductCreateBodyType } from '../types/products.type';
@@ -8,6 +10,8 @@ import { ProductCreateBodyType } from '../types/products.type';
 @Service()
 export class ProductService {
   public product = new PrismaClient().product;
+  public cagoriesProducts = new CategoriesProductsService();
+  
 
   public async findAllProduct(): Promise<Product[]> {
     const allProduct = await this.product.findMany();
@@ -60,9 +64,49 @@ export class ProductService {
         description: data.description,
         imageUrl: data.imageUrl,
         price: data.price,
-        quantity: data.quantity
+        quantity: data.quantity,
+        CategoriesOnProducts: {
+          create: data.categories?.map((categoryId: string) => {
+            return {
+              category: {
+                connect: {
+                  id: categoryId
+                }
+              }
+            }
+          }),
+        }
       },
+    });
+  
+    return result;
+  }
+
+  public async getRecommendedProducts(productId: string): Promise<Product[] | null> {
+    let result: Product[] | null = null;
+
+    const product = await this.product.findUniqueOrThrow({
+      where: {
+        id: productId
+      },
+      include: {
+        CategoriesOnProducts: true,
+      }
     })
+
+    if (product.CategoriesOnProducts.length) {
+      const categoryIdArr = product.CategoriesOnProducts.map(item => item.categoryId);
+
+      const categoriesWithProducts = await this.cagoriesProducts.getProductsByCategoryId(categoryIdArr);
+
+      if (categoriesWithProducts?.length) {
+        result = categoriesWithProducts.map(product => product.product);
+      }
+
+    } else {
+      console.log("masuk")
+    }
+
     return result;
   }
 }
