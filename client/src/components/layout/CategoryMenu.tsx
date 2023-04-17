@@ -1,8 +1,7 @@
-import React, { useEffect, useState }  from 'react'
+import React  from 'react'
 import clsx from 'clsx';
 import Link from 'next/link';
 
-import { getCategoryList } from '@/services/category';
 import { CategoryType } from '@/types/categoryTypes';
 
 
@@ -16,8 +15,8 @@ function CategoryMenu({
   return (
     <aside
       className={clsx(
-        ' w-52 top-0',
-        'hidden md:flex flex-col',
+        'sticky w-full max-w-[245px] top-[5rem] z-10 overflow-y-auto h-auto',
+        'self-start'
       )}
     >
       <ul>
@@ -54,3 +53,13 @@ function CategoryMenu({
 }
 
 export default CategoryMenu;
+// position: sticky;
+// top: 94px;
+// z-index: 1;
+// display: block;
+// min-width: 316px;
+// max-height: calc(100vh - 118px);
+// margin-right: 32px;
+// border: 1px solid rgba(198, 198, 198, 0.6);
+// border-radius: 4px;
+// overflow-y: auto;

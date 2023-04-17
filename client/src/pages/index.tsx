@@ -2,7 +2,6 @@ import Head from 'next/head'
 import { Inter } from 'next/font/google'
 
 import Layout from '@/components/layout/Layout'
-import HeroSection from '@/components/HeroSection'
 import CatalogSection from '@/components/CatalogSection'
 
 import { getCategoryList } from '@/services/category'
@@ -21,7 +20,6 @@ export default function Home({
   categories,
   products
 }: HomeProps) {
-  console.log({ categories })
 
   return (
     <>
@@ -31,10 +29,11 @@ export default function Home({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout>
-        <HeroSection/>
+      <Layout
+        isShowHeroSection
+        categories={categories}
+      >
         <CatalogSection
-          categories={categories}
           products={products}
         />
       </Layout>
@@ -42,7 +41,7 @@ export default function Home({
   )
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   try {
     const categories =  await getCategoryList();
     categories.sort((a, b) => b.name.length - a.name.length)
@@ -56,6 +55,8 @@ export async function getServerSideProps() {
       }, 
     }
   } catch (error) {
-    console.error(error)
+    return {
+      notFound: true
+    }
   } 
 }

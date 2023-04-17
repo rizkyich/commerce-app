@@ -1,26 +1,22 @@
 import React, { useEffect, useState } from 'react'
 
-import CategoryMenu from './CategoryMenu'
+import CategoryMenu from './layout/CategoryMenu'
 
-import { getProductList } from '@/services/products';
 import { ProductType } from '@/types/productTypes';
 import { CategoryType } from '@/types/categoryTypes';
 import ProductCard from './ProductCard';
 
 type CatalogSectionProps = {
-  categories: CategoryType[];
   products: ProductType[];
 }
 
 function CatalogSection({
-  categories,
   products,
 }: CatalogSectionProps) {
 
   return (
     <section className='flex gap-12 min-h-screen my-4'>
-      <CategoryMenu categories={categories}/>
-      <div className='w-full'>
+      <div className='w-full flex flex-wrap gap-8'>
         {
           products.map((product: ProductType) => {
             return (

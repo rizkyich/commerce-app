@@ -5,18 +5,24 @@ import {
   createContext
 } from 'react';
 import clsx from 'clsx';
+import { useRouter } from 'next/router';
 
 const PreloadContext = createContext<boolean>(false);
 
 export function PreloadProvider({ children }: { children: React.ReactNode }) {
   /** If the dom is loaded */
   const [preloaded, setIsPreloaded] = useState<boolean>(false);
+  const dynamicRoute = useRouter().asPath
 
   useEffect(() => {
-    setTimeout(() => {
+    const handler =  setTimeout(() => {
       setIsPreloaded(true);
-    }, 200);
-  }, []);
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    }
+  }, [dynamicRoute]);
 
   return (
     <PreloadContext.Provider value={preloaded}>

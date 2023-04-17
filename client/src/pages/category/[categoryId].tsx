@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { GetServerSidePropsContext } from 'next'
+import { GetServerSidePropsContext, GetStaticPathsContext, GetStaticPropsContext } from 'next'
 import { Inter } from 'next/font/google'
 
 import Layout from '@/components/layout/Layout'
@@ -30,9 +30,10 @@ export default function CatalogPage({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Layout>
+      <Layout
+        categories={categories}
+      >
         <CatalogSection
-          categories={categories}
           products={products}
         />
       </Layout>
@@ -40,7 +41,24 @@ export default function CatalogPage({
   )
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+
+
+export async function getStaticPaths() {
+  try {
+    const categories =  await getCategoryList();
+    categories.sort((a, b) => b.name.length - a.name.length)
+
+    const paths = categories.map((category: CategoryType) => ({
+      params: { categoryId: category.id }
+    }))
+
+    return { paths: [ ...paths, { params: {  categoryId: 'all' }  } ], fallback: false }
+  } catch (error) {
+    console.error(error)
+  } 
+}
+
+export async function getStaticProps(context: GetStaticPropsContext) {
   try {
     const { params } = context
 
@@ -49,15 +67,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     let products: ProductType[];
 
-    if (params?.categoryId !== "all") {
-      const category = categories.find((category: CategoryType) => category.id === params?.categoryId);
-
-      if (!category) {
-        return {
-          notFound: true
-        }
-      }
-      products = await getProductList(category.id);
+    if (params?.categoryId && params?.categoryId !== "all") {
+      products = await getProductList(params.categoryId as string);
     } else {
       products = await getProductList();
     }
@@ -65,11 +76,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return {
       props: {
         categories,
-        products
+        products,
       }, 
     }
   } catch (error) {
-    console.error(error)
+    return {
+      notFound: true
+    }
   } 
 }
-

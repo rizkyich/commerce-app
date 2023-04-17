@@ -11,6 +11,5 @@ export const getProductList = async (
     method: 'get',
     url: `store/v1/products${categoryId ? '?categoryId=' + categoryId : ''}`
   })
-
   return data;
 }
