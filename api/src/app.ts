@@ -9,7 +9,6 @@ import ErrorHandler from './middlewares/error.middleware';
 
 import { NODE_ENV, PORT } from './config';
 
-
 export class App {
   public app: Application;
   public env: string;

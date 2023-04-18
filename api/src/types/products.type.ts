@@ -1,9 +1,11 @@
 import { Product, Category } from "@prisma/client";
+import { PaginationResType } from "./common.type";
 
 type ProductResponseType = {
   products: Product[],
-  message: string;
-}
+  message?: string;
+  pageInfo: PaginationResType,
+};
 
 type ProductCreateBodyType = Pick<Product,
   | "name"
@@ -13,7 +15,7 @@ type ProductCreateBodyType = Pick<Product,
   | "quantity"
 > & {
   categories?: string[];
-};
+}
 
 export {
   ProductResponseType,

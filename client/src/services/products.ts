@@ -1,15 +1,28 @@
 import axiosClient from './axiosClient'
 
-import { ProductType } from '@/types/productTypes';
+import { ProductsResponseType } from '@/types/productTypes';
+import { PaginationType } from '@/types/common';
 
-export const getProductList = async (
-  categoryId?: string
-)  => {
+export const getProductList = async ({
+  categoryId,
+  pageInfo, 
+}: {
+  categoryId?: string;
+  pageInfo: PaginationType;
+})  => {
+  const paramObj = {
+    ...( categoryId && { categoryId }),
+    itemsPerPage: (pageInfo.itemsPerPage || 10).toString(),
+    currentPage: (pageInfo.currentPage || 1).toString(),
+  }
+
+  const searhParams = new URLSearchParams(paramObj);
+
   const {
     data
-  }: { data: ProductType[] } = await axiosClient({
+  }: { data: ProductsResponseType } = await axiosClient({
     method: 'get',
-    url: `store/v1/products${categoryId ? '?categoryId=' + categoryId : ''}`
+    url: `store/v1/products?${searhParams}`
   })
   return data;
 }

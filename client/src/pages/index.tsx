@@ -6,7 +6,6 @@ import CatalogSection from '@/components/CatalogSection'
 
 import { getCategoryList } from '@/services/category'
 import { CategoryType } from '@/types/categoryTypes'
-import { getProductList } from '@/services/products'
 import { ProductType } from '@/types/productTypes'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -33,9 +32,7 @@ export default function Home({
         isShowHeroSection
         categories={categories}
       >
-        <CatalogSection
-          products={products}
-        />
+        <CatalogSection/>
       </Layout>
     </>
   )
@@ -46,12 +43,9 @@ export async function getStaticProps() {
     const categories =  await getCategoryList();
     categories.sort((a, b) => b.name.length - a.name.length)
 
-    const products = await getProductList();
-
     return {
       props: {
         categories,
-        products
       }, 
     }
   } catch (error) {

@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import clsx from 'clsx';
 
+import thousandSeparators from '@/helpers/tousandSeparators';
+
 import { ProductType } from '@/types/productTypes';
 
 type ProductCardProps = {
@@ -10,14 +12,16 @@ type ProductCardProps = {
 export default function ProductCard({
   product
 }: ProductCardProps) {
+  const priceString = `IDR ${thousandSeparators(product.price)}`
+
   return (
     <div
       className={clsx(
-        'relative w-[350px] h-[450px] shadow-md',
-        'rounded-md'
+        'relative w-[300px] h-[450px] shadow-md',
+        'rounded-md mx-auto'
       )}
     >
-      <div className='relative w-[350px] h-[300px] rounded-md'>
+      <div className='relative w-[300px] h-[300px] rounded-md'>
         <Image
           fill
           src={product.imageUrl}
@@ -27,9 +31,9 @@ export default function ProductCard({
       </div>
 
       <div className='flex flex-col py-8 p-5'>
-        <h3 className='text-xl mx-auto mb-3 text-chinese-black'>{product.name}</h3>
+        <h3 className='text-xl mb-1 text-chinese-black'>{product.name}</h3>
         
-        <p>Price: {product.price}</p>
+        <p className='text-lg text-chinese-black'>{priceString}</p>
       
       </div>
 

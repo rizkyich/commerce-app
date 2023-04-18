@@ -1,3 +1,5 @@
+import { PaginationType } from "./common";
+
 export type ProductType = {
   id: string;
   name: string;
@@ -7,4 +9,9 @@ export type ProductType = {
   quantity: number;
   createdAt: string;
   updatedAt: string; 
+}
+
+export type ProductsResponseType = {
+  products: ProductType[],
+  pageInfo: PaginationType,
 }

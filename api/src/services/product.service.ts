@@ -5,17 +5,48 @@ import { CategoriesProductsService } from "./categoriesProduct.service";
 
 import HttpError from "../errors/HttpError";
 
-import { ProductCreateBodyType } from '../types/products.type';
+import { ProductCreateBodyType, ProductResponseType } from '../types/products.type';
+import { PaginationReqType } from "../types/common.type";
 
 @Service()
 export class ProductService {
-  public product = new PrismaClient().product;
+  public prisma = new PrismaClient();
+  public product = this.prisma.product;
   public cagoriesProducts = new CategoriesProductsService();
   
 
-  public async findAllProduct(): Promise<Product[]> {
-    const allProduct = await this.product.findMany();
-    return allProduct;
+  public async findAllProduct({
+    pageInfo,
+    categoryId
+  }: {
+    pageInfo: PaginationReqType;
+    categoryId: string;
+  }): Promise<ProductResponseType> {
+
+    const [products, count] = await this.prisma.$transaction([
+      this.product.findMany({
+        where: (categoryId ? {
+          CategoriesOnProducts: {
+            some: {
+              categoryId
+            }
+          }
+        }: {}),
+        skip: (pageInfo.currentPage - 1) * pageInfo.itemsPerPage,
+        take: pageInfo.itemsPerPage,
+      }),
+      this.product.count(),
+    ])
+
+    const pageInfoObj = {
+      ...pageInfo,
+      totalPages: Math.ceil(count / pageInfo.itemsPerPage),
+    }
+
+    return { 
+      products,
+      pageInfo: pageInfoObj,
+    };
   }
 
   public async findProductById(productId: string): Promise<Product | null> {

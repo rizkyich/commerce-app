@@ -14,12 +14,12 @@ const inter = Inter({ subsets: ['latin'] })
 
 type CatalogPageProps = {
   categories: CategoryType[],
-  products: ProductType[]
+  categoryId: string,
 }
 
 export default function CatalogPage({
   categories,
-  products
+  categoryId
 }: CatalogPageProps) {
 
   return (
@@ -34,7 +34,7 @@ export default function CatalogPage({
         categories={categories}
       >
         <CatalogSection
-          products={products}
+          categoryId={categoryId}
         />
       </Layout>
     </>
@@ -52,7 +52,7 @@ export async function getStaticPaths() {
       params: { categoryId: category.id }
     }))
 
-    return { paths: [ ...paths, { params: {  categoryId: 'all' }  } ], fallback: false }
+    return { paths, fallback: false }
   } catch (error) {
     console.error(error)
   } 
@@ -65,18 +65,10 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     const categories =  await getCategoryList();
     categories.sort((a, b) => b.name.length - a.name.length)
 
-    let products: ProductType[];
-
-    if (params?.categoryId && params?.categoryId !== "all") {
-      products = await getProductList(params.categoryId as string);
-    } else {
-      products = await getProductList();
-    }
-
     return {
       props: {
         categories,
-        products,
+        categoryId: params?.categoryId
       }, 
     }
   } catch (error) {

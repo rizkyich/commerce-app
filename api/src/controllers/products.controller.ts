@@ -4,7 +4,9 @@ import { Product } from '@prisma/client';
 
 import { ProductService } from '../services/product.service';
 import { CategoriesProductsService } from '../services/categoriesProduct.service';
-import { ProductCreateBodyType } from '../types/products.type';
+
+import { ProductCreateBodyType, ProductResponseType } from '../types/products.type';
+import { PaginationReqType } from '../types/common.type';
 
 export class ProductController {
   public product = Container.get(ProductService);
@@ -12,14 +14,17 @@ export class ProductController {
 
   public getProducts = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { categoryId } = req.query;
-      let productData: Product[] = []
-      
-      if (categoryId) {
-        productData = await this.categoriesProducts.findAllProductByCategoryId(categoryId as string);
-      } else {
-        productData = await this.product.findAllProduct();
+      const { categoryId, currentPage, itemsPerPage } = req.query;
+
+      const pageInfo: PaginationReqType = {
+        currentPage: Number(currentPage) || 1,
+        itemsPerPage: Number(itemsPerPage) || 10,
       }
+      
+      const productData = await this.product.findAllProduct({
+          pageInfo,
+          categoryId: categoryId as string,
+        });
 
       res.status(200).json(productData)
     } catch (error) {

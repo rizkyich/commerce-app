@@ -15,8 +15,8 @@ function CategoryMenu({
   return (
     <aside
       className={clsx(
-        'sticky w-full max-w-[245px] top-[5rem] z-10 overflow-y-auto h-auto',
-        'self-start'
+        'sticky min-w-[200px] top-[5rem] z-10 overflow-y-auto h-auto',
+        'self-start hidden lg:block'
       )}
     >
       <ul>
@@ -41,7 +41,7 @@ function CategoryMenu({
           <span className='block w-full border-b-2 my-6 border-majorelle-blue'/>
           <li>
             <Link
-              href='/category/all'
+              href='/'
               className='text-chinese-black text-[22px] font-semibold'
             >
               View All

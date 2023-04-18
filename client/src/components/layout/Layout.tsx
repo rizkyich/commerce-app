@@ -27,15 +27,10 @@ export default function Layout({
           'w-full container mx-auto',
           'mt-16'
         )}>
-          {
-            isShowHeroSection && (
-              <HeroSection/>
-            )
-          }
-          <div className='px-0 lg:px-5 py-5 flex gap-14'>
+          <div className='px-0 lg:px-5 py-5 flex gap-8'>
             <CategoryMenu categories={categories}/>
             <div
-              className='min-h-[calc(100vh+200px)]'
+              className='w-full min-h-[calc(100vh+200px)]'
             >
               {children}
             </div>
